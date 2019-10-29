@@ -1,19 +1,20 @@
 {
-  "name": "jiangchongyang",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "devDependencies": {
-    "vuepress": "^1.1.0"
-  },
-  "scripts": {
-    "docs:dev": "vuepress dev src",
-    "docs:build": "vuepress build src"
-  },
-  "browserslist": [
-    ">1%",
-    "last 4 versions",
-    "Firefox ESR",
-    "not ie < 9"
-  ]
+    "name": "jiangchongyang",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "devDependencies": {
+        "vuepress": "^1.1.0"
+    },
+    "scripts": {
+        "docs:dev": "vuepress dev src",
+        "docs:build": "vuepress build src",
+        "deploy": "bash deploy.sh"
+    },
+    "browserslist": [
+        ">1%",
+        "last 4 versions",
+        "Firefox ESR",
+        "not ie < 9"
+    ]
 }

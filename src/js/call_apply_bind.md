@@ -22,3 +22,10 @@ allName('我是', '前端') //我的全名是“我是前端”  this指向windo
 allName.call(obj, '我是', '前端') //我的全名是“我是一个前端” this指向obj
 ```
 ![输出结果](/call.png)
+
+## apply
+> apply接收两个参数,第一个参数为函数上下文this,第二个参数为函数参数,只不过是通过一个数组的形式传入的。
+
+```js
+allNmame.apply(obj,['我是','前端']) //我的全名是“我是一个前端” this指向obj
+```
