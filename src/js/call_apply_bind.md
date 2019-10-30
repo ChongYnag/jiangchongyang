@@ -185,6 +185,9 @@ Function.prototype.myBind = function(context){
   let _this = this;
   let arg = [...arguments].slice(1);
   function F(){
+    // 当作为构造函数时，this 指向实例，此时结果为 true，将绑定函数的 this 指向该实例，可以让实例获得来自绑定函数的值
+    // 以上面的是 demo 为例，如果改成 `this instanceof F ? null : context`，实例只是一个空对象，将 null 改成 this ，实例会具有 fn 属性        
+    // 当作为普通函数时，this 指向 window，此时结果为 false，将绑定函数的 this 指向 context
     _this.apply(this instanceof F?this:context,[...arg,...arguments]);
   }
   if(_this.prototype){
@@ -211,12 +214,11 @@ getName.prototype.fn = function(){
 }
 
 let fn = getName.myBind(obj,17);
-fn.prototype.fn = function(){
-  console.log(1)
-}
-new fn(1).fn()
-obj.fn()
-getName.prototype.fn()
+fn(1);
+
+let f = new fn(1);
+f.fn();
+
 getName.myBind(obj,17)(100)
 
 //call
