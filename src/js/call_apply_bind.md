@@ -29,3 +29,231 @@ allName.call(obj, '我是', '前端') //我的全名是“我是一个前端” 
 ```js
 allNmame.apply(obj,['我是','前端']) //我的全名是“我是一个前端” this指向obj
 ```
+
+## bind
+> bind接收多个参数，第一个是bind返回值，返回值是一个函数上下文的this，不会立即执行。
+
+```js
+let obj = {
+    name:"一个"
+}
+
+function allName(firstName,lastName,flag){
+    console.log(this);
+    console.log(`我的全名是"${firstName}${this.name}${lastName}"我的座右铭是"${flag}"`)
+}
+
+allName.bind(obj); //不会执行
+let fn = allName.bind(obj);
+fn('我是', '前端', '好好学习天天向上') //我的全名是"我是一个前端"我的座右铭是"好好学习天天向上"
+    
+// 也可以这样用，参数可以分开传。bind后的函数参数默认排列在原函数参数后边
+fn = allName.bind(obj, "你是")
+fn('前端', '好好学习天天向上') //我的全名是"你是一个前端"我的座右铭是"好好学习天天向上"
+```
+
+### 实现call
+```js
+const obj = {
+    name:'joy',
+    fn:function(){
+        console.log(1);
+    }
+};
+
+function getName(a,b){
+    console.log(this.name,a,b);
+}
+
+function mySymbol(obj) {
+   let fn = (Math.random()+new Date().getTime()).toString(32).slice(0,8);
+   if(obj.hasOwnProperty(fn)){
+       return mySymbol(obj); //递归调用 
+   }else{
+       return fn;
+   }
+}
+
+Function.prototype.newCall = function(context){
+    //异常处理
+    if(typeof this !== 'function'){
+        throw this+"is not a function";
+    }
+    context = context || window;
+    //这里考虑fn方法与obj里面的方法 会重名 需要判断
+    // context.fn = this;
+    let fn = mySymbol(context);
+    context[fn] = this;
+    let arg = [...arguments].slice(1);
+    context[fn](...arg);
+    delete context[fn];
+}
+
+getName.newCall(obj,1,2); // joy 1 2
+```
+
+### 实现apply 
+```js
+const obj = {
+    name:'joy',
+    fn:function(){
+        console.log(1);
+    }
+};
+
+function getName(a,b){
+    console.log(this.name,a,b);
+}
+
+function mySymbol(obj) {
+   let fn = (Math.random()+new Date().getTime()).toString(32).slice(0,8);
+   if(obj.hasOwnProperty(fn)){
+       return mySymbol(obj); //递归调用 
+   }else{
+       return fn;
+   }
+}
+
+Function.prototype.newApply = function(context){
+    //异常处理
+    if(typeof this !== 'function'){
+        throw this+"is not a function";
+    }
+    context = context || window;
+    //这里考虑fn方法与obj里面的方法 会重名 需要判断
+    // context.fn = this;
+    let fn = mySymbol(context);
+    context[fn] = this;
+    //apply 传递参数是数组 所以这里不需要解构了
+    let arg = arguments[1] || [];
+    context[fn](...arg);
+    delete context[fn];
+}
+
+getName.newApply(obj,[1,2]); // joy 1 2
+```
+
+### 实现bind
+
+```js
+const obj = {
+    name:'joy'
+};
+
+function getName(name,age,grade){
+    this.name = name;
+    console.log(`我叫${this.name},我今年${age},我得了${grade}分`);
+}
+
+getName.prototype.say = function(){
+    console.log(this.name);
+}
+
+Function.prototype.newBind = function(context){
+    if(typeof this !== "function"){
+        throw this+"is not a function"; 
+    }
+    let self = this;
+    let arg = [...arguments].slice(1);
+    const F = function(){
+        self.apply(this instanceof F?this:context,[...arg,...arguments])
+    }
+
+    if (self.prototype) {
+        F.prototype = self.prototype;
+    }
+
+    return F;
+}
+// getName.newBind(obj,17)(100) //joy
+let fun = getName.newBind(obj,'李琪',17,100);
+fun();
+console.log(new fun().say());
+// let fun = getName.newBind(obj) //joy
+
+// console.log(new fun(17,100));
+```
+
+### 练习
+```js
+//call apply bind 实现
+//bind
+Function.prototype.myBind = function(context){
+  if(typeof this !== "function"){
+    throw new Error(this + "不是一个function");
+  }
+  let _this = this;
+  let arg = [...arguments].slice(1);
+  function F(){
+    _this.apply(this instanceof F?this:context,[...arg,...arguments]);
+  }
+  if(_this.prototype){
+    F.prototype = _this.prototype;
+  }
+  return F;
+}
+
+let obj = {
+  name:"李琪",
+  age:18,
+  fn:function(){
+    console.log("fn")
+  }
+};
+
+function getName(age,grade){
+//   this.name = "ss";
+  console.log(`我是${this.name},我${age},我得了${grade}分数`)
+}
+
+getName.prototype.fn = function(){
+  console.log("woshifn");
+}
+
+let fn = getName.myBind(obj,17);
+fn.prototype.fn = function(){
+  console.log(1)
+}
+new fn(1).fn()
+obj.fn()
+getName.prototype.fn()
+getName.myBind(obj,17)(100)
+
+//call
+function mySypol(obj){
+  let fn = (Math.random()+new Date().getTime()).toString(32).slice(0,8);
+  if(obj.hasOwnProperty(fn)){
+    return mySypol(obj)
+  }else{
+    return fn;
+  }
+}
+Function.prototype.myCall = function(context){
+  if(typeof this !== "function"){
+    throw new Error(this + "不是一个function");
+  }
+  context = context || window;
+  let arg = [...arguments].slice(1);
+  //fn 有可能重名 这里可以处理下
+  let fn = mySypol(context);
+  context[fn] = this;
+  context[fn](...arg);
+  delete context[fn];
+}
+
+getName.myCall(obj,1,2);
+
+
+Function.prototype.myApply = function(context){
+  if(typeof this !== "function"){
+    throw new Error(this + "不是一个function");
+  }
+  context = context || window;
+  let arg = arguments[1];
+  let fn = mySypol(context);
+  context[fn] = this;
+  context[fn](...arg);
+  delete context[fn];
+}
+getName.apply(obj,[1,2]);
+```
