@@ -6,6 +6,21 @@ module.exports = {
     themeConfig: {
         sidebar: [
             {
+                title:"变量类型",
+                collapsable: false,
+                children: [
+                    '/js/值类型和引用类型',
+                ]
+            },
+            {
+                title:"原型和原型链",
+                collapsable: false,
+                children: [
+                    '/js/原型和原型链',
+                    '/js/手写简易JQuery实现',
+                ]
+            },
+            {
                 title: 'js经典问题',
                 //  path: '/interview/',
                 collapsable: false,
