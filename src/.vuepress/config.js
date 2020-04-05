@@ -21,6 +21,17 @@ module.exports = {
                 ]
             },
             {
+                title:"作用域合闭包",
+                collapsable: false,
+                children: [
+                    '/js/作用域',
+                    '/js/闭包',
+                    '/js/this',
+                    '/js/call_apply_bind',
+                ]
+            },
+            
+            {
                 title: 'js经典问题',
                 //  path: '/interview/',
                 collapsable: false,
