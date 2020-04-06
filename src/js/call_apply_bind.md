@@ -90,9 +90,11 @@ Function.prototype.newBind = function (context) {
         throw `${this} is not a function`;
     }
     
+
     let self = this;
     // 讲参数解析为数组
     let args = [...arguments].slice(1);
+    
     return function () {
         self.apply(context, args);
     }
