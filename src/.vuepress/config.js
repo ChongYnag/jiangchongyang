@@ -44,7 +44,7 @@ module.exports = {
                 //  path: '/interview/',
                 collapsable: false,
                 children: [
-                    '/interview/inherit',
+                    '/interview/inh·erit',
                     '/interview/xss_csrf',
                     '/interview/event_loop'
                 ]
