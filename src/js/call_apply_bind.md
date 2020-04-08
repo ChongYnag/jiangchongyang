@@ -84,21 +84,20 @@ allName.newApply(obj, ["我是", "前端"]);
 /**
  *  实现bind
  */
-Function.prototype.newBind = function (context) {
-    //异常处理
-    if (typeof this !== "function") {
-        throw `${this} is not a function`;
+Function.prototype.newBind =  function(context){
+    if(typeof this !== "function"){
+        throw `${this} is not a function`
     }
-    
-
-    let self = this;
-    // 讲参数解析为数组
-    let args = [...arguments].slice(1);
-    
-    return function () {
-        self.apply(context, args);
+    let args = Array.prototype.slice.call(arguments,1);
+    let self = this,
+        fn = function(){
+              return self.apply(this instanceof fn?this:context, [...args,...arguments]);     
+        };
+    if(this.prototype){
+        fn.prototype = this.prototype;
     }
-}
+    return fn;
+};
 //测试newBind
 let newBind = allName.newBind(obj, "我是", "前端");
 newBind();
