@@ -89,12 +89,12 @@ Function.prototype.newBind =  function(context){
         throw `${this} is not a function`
     }
     let args = Array.prototype.slice.call(arguments,1);
-    let self = this,
-        fn = function(){
-              return self.apply(this instanceof fn?this:context, [...args,...arguments]);     
+    let fn = this,
+        bindFn = function(){
+              return fn.apply(this instanceof bindFn?this:context, [...args,...arguments]);     
         };
     if(this.prototype){
-        fn.prototype = this.prototype;
+        bindFn.prototype = this.prototype;
     }
     return fn;
 };

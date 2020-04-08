@@ -30,7 +30,13 @@ module.exports = {
                     '/js/call_apply_bind',
                 ]
             },
-            
+            {
+                title:"http缓存",
+                collapsable: false,
+                children: [
+                    '/js/http缓存',
+                ]
+            },
             {
                 title: 'js经典问题',
                 //  path: '/interview/',
